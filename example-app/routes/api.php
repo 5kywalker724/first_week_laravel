@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('registration', [UserController::class, 'registration']);
+Route::post('registration/verify', [UserController::class, 'verifyRegistration']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
