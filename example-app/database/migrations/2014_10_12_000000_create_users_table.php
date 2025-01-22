@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 36);
             $table->string('email', 255)->unique();
             $table->string('password', 255);
-            $table->unsignedInteger('verify_code');
+            $table->string('verify_code')->nullable();
             $table->boolean('validation_status')->default(0);
             $table->timestamps();
         });
