@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthorizationRequest;
+use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\RegistrationRequest;
 use App\Http\Requests\VerifyRegistrationRequest;
 use Illuminate\Support\Facades\Hash;
@@ -65,5 +66,19 @@ class UserController extends Controller
         $cookie = cookie('token', $token);
 
         return response()->json(['status' => true, 'message' => 'Пользователь успешно авторизирован', 'token' => $token])->withCookie($cookie);
+    }
+
+    public function passwordReset(PasswordResetRequest $request)
+    {
+        if(User::where('email', $request->email)->exists()){
+            $user = User::where('email', $request->email)->first();
+
+            VerificationCode::send($user->email);
+
+            return response()->json(['status' => true, 'message' => 'Код для сброса пароля был отправлен на почту', 'data' => $user]);
+        }
+        else{
+            return response()->json(['status' => false, 'message' => 'Введенная почта не относится ни к одному из пользователей'], 404);
+        }
     }
 }
