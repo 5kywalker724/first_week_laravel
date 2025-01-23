@@ -23,14 +23,29 @@ class PasswordResetRequest extends FormRequest
     {
         return [
             'email' => 'required|email',
+            'password' => [
+                'required',
+                'min:8',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[!@#$%^&*?:;]/'
+            ],
+            'verify_code' => 'required|integer|max_digits:6'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'email.required' => 'Поле Электронная почта обязательно для заполнения',
-            'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
+            'email.required' => 'Электронная почта должна быть передана для запроса',
+            'email.email' => 'Электронная почта должна соответствовать формату эл. почт',
+            'password.required' => 'Поле Пароль обязательно для заполнения',
+            'password.min' => 'Поле Пароль должно быть длинной минимум в 8 символов',
+            'password.regex' => 'Поле Пароль должно содержать латинские прописные и строчные буквы, цифры и специальные символы',
+            'verify_code.required' => 'Верификационный код должен быть передан для запроса',
+            'verify_code.integer' => 'Верификационный код должен быть числом',
+            'verify_code.max_digits' => 'Значение верификационного кода вмещает максимум 6 чисел'
         ];
     }
 }

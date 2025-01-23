@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthorizationRequest;
+use App\Http\Requests\PasswordResetEmailRequest;
 use App\Http\Requests\PasswordResetRequest;
+use App\Http\Requests\PasswordResetVerifyRequest;
 use App\Http\Requests\RegistrationRequest;
 use App\Http\Requests\VerifyRegistrationRequest;
 use Illuminate\Support\Facades\Hash;
@@ -41,7 +43,7 @@ class UserController extends Controller
                 return response()->json(['status' => true, 'message' => 'Пользователь подтвердил свой аккаунт', 'data' => $user]);
             }
 
-            return response()->json(['status' => true, 'message' => 'Введенный код не относится ни к одному из пользователей'], 404);
+            return response()->json(['status' => false, 'message' => 'Введенный код не относится ни к одному из пользователей'], 404);
         }
         else{
             return response()->json(['status' => false, 'message' => 'Использованная почта не относится ни к одному из пользователей'], 404);
@@ -68,17 +70,57 @@ class UserController extends Controller
         return response()->json(['status' => true, 'message' => 'Пользователь успешно авторизирован', 'token' => $token])->withCookie($cookie);
     }
 
-    public function passwordReset(PasswordResetRequest $request)
+    public function passwordResetEmail(PasswordResetEmailRequest $request)
     {
         if(User::where('email', $request->email)->exists()){
             $user = User::where('email', $request->email)->first();
 
             VerificationCode::send($user->email);
 
-            return response()->json(['status' => true, 'message' => 'Код для сброса пароля был отправлен на почту', 'data' => $user]);
+            return response()->json(['status' => true, 'message' => 'Код для восстановления пароля был отправлен на почту', 'data' => $user]);
         }
         else{
             return response()->json(['status' => false, 'message' => 'Введенная почта не относится ни к одному из пользователей'], 404);
         }
     }
+
+    public function passwordResetVerify(PasswordResetVerifyRequest $request)
+    {
+        if(User::where('email', $request->email)->exists()){
+
+            $user = User::where('email', $request->email)->first();
+
+            if(VerificationCode::verify($request->verify_code, $request->email, false)){
+                return response()->json(['status' => true, 'message' => 'Введенный код для восстановления пароля подтвержден', 'user' => $user,
+                    'verify_code' => $request->verify_code]);
+            }
+
+            return response()->json(['status' => false, 'message' => 'Введенный код не относится ни к одному из пользователей'], 404);
+        }
+        else{
+            return response()->json(['status' => false, 'message' => 'Использованная почта не относится ни к одному из пользователей'], 404);
+        }
+    }
+
+    public function passwordReset(PasswordResetRequest $request)
+    {
+        if(User::where('email', $request->email)->exists()){
+
+            $user = User::where('email', $request->email)->first();
+
+            if(VerificationCode::verify($request->verify_code, $request->email)){
+                $user->update([
+                    'password' => Hash::make($request->password)
+                ]);
+
+                return response()->json(['status' => true, 'message' => 'Пароль был успешно изменен', 'data' => $user]);
+            }
+
+            return response()->json(['status' => false, 'message' => 'Использованный код не относится ни к одному из пользователей']);
+        }
+        else{
+            return response()->json(['status' => false, 'message' => 'Использованная почта не относится ни к одному из пользователей'], 404);
+        }
+    }
+    
 }
