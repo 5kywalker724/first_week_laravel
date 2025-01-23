@@ -8,6 +8,7 @@ use App\Http\Requests\RegistrationRequest;
 use App\Http\Requests\VerifyRegistrationRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Wotz\VerificationCode\VerificationCode;
 
 use App\Models\User;
 
@@ -15,19 +16,13 @@ class UserController extends Controller
 {
     public function registration(RegistrationRequest $request)
     {
-        $verify_code = mt_rand(100000, 999999);
 
-        while(User::where('verify_code', $verify_code)->exists()){
-            $verify_code = mt_rand(100000, 999999);
-        }
-
-        // наверное тут кусок кода который отвечает за отправку самого кода на почту
+        VerificationCode::send($request->email);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'verify_code' => $verify_code
         ]);
 
         return response()->json(['status' => true, 'message' => 'Пользователь прошел базовую регистрацию', 'data' => $user]);
@@ -35,15 +30,20 @@ class UserController extends Controller
 
     public function verifyRegistration(VerifyRegistrationRequest $request)
     {
-        if(User::where('verify_code', $request->verify_code)->exists()){
-            $user = User::where('verify_code', $request->verify_code)->first();
+        if(User::where('email', $request->email)->exists()){
 
-            $user->markEmailAsVerified();
+            $user = User::where('email', $request->email)->first();
 
-            return response()->json(['status' => true, 'message' => 'Пользователь подтвердил свой аккаунт', 'data' => $user]);
+            if(VerificationCode::verify($request->verify_code, $request->email)){
+                $user->markEmailAsVerified();
+
+                return response()->json(['status' => true, 'message' => 'Пользователь подтвердил свой аккаунт', 'data' => $user]);
+            }
+
+            return response()->json(['status' => true, 'message' => 'Введенный код не относится ни к одному из пользователей'], 404);
         }
         else{
-            return response()->json(['status' => false, 'message' => 'Введенный код не относится ни к одному из пользователей'], 404);
+            return response()->json(['status' => false, 'message' => 'Использованная почта не относится ни к одному из пользователей'], 404);
         }
     }
 

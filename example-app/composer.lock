@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfe12996eeecb6fdc8713a9fd9d431f8",
+    "content-hash": "67cec46f50581517ff3eaedc749515bb",
     "packages": [
         {
             "name": "brick/math",
@@ -5610,6 +5610,75 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "wotz/laravel-verification-code",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wotzebra/laravel-verification-code.git",
+                "reference": "3449314d0390b10d449ccf3dca036784884d74b0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wotzebra/laravel-verification-code/zipball/3449314d0390b10d449ccf3dca036784884d74b0",
+                "reference": "3449314d0390b10d449ccf3dca036784884d74b0",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/notifications": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "php": "^8.1|^8.2|^8.3"
+            },
+            "require-dev": {
+                "adamwojs/php-cs-fixer-phpdoc-force-fqcn": "^2.0",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "orchestra/testbench": "^5.0|^6.0|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.1|^10.0",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "VerificationCode": "Wotz\\VerificationCode\\VerificationCode"
+                    },
+                    "providers": [
+                        "Wotz\\VerificationCode\\VerificationCodeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wotz\\VerificationCode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Günther Debrauwer",
+                    "email": "gunther.debrauwer@whoownsthezebra.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple way to authenticate a user using a verification code.",
+            "homepage": "https://github.com/wotzebra/laravel-verification-code",
+            "keywords": [
+                "Authentication",
+                "laravel",
+                "one-time code",
+                "verification",
+                "verification Code"
+            ],
+            "support": {
+                "issues": "https://github.com/wotzebra/laravel-verification-code/issues",
+                "source": "https://github.com/wotzebra/laravel-verification-code/tree/3.0.0"
+            },
+            "time": "2024-09-26T11:08:32+00:00"
         }
     ],
     "packages-dev": [

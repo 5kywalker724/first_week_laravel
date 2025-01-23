@@ -22,6 +22,7 @@ class VerifyRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'email' => 'required|email',
             'verify_code' => 'required|integer|max_digits:6'
         ];
     }
@@ -29,6 +30,8 @@ class VerifyRegistrationRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'email.required' => 'Электронная почта должна быть передана для запроса',
+            'email.email' => 'Электронная почта должна соответствовать формату эл. почт',
             'verify_code.required' => 'Поле с кодом обязательно для заполнения',
             'verify_code.integer' => 'Значение введенное в поле с кодом должно быть числом',
             'verify_code.max_digits' => 'Значение введенное в поле с кодом вмещает максимум 6 чисел'
