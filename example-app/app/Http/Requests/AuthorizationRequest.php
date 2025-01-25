@@ -23,7 +23,8 @@ class AuthorizationRequest extends FormRequest
     {
         return [
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
+            'remember_me' => 'required|string'
         ];
     }
 
@@ -33,6 +34,8 @@ class AuthorizationRequest extends FormRequest
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
             'password.required' => 'Поле Пароль обязательно для заполнения',
+            'remember_me.required' => 'Поле Запомнить меня обязательно для заполнения',
+            'remember_me.string' => 'Поле Запомнить меня должно быть строкового типа',
         ];
     }
 }

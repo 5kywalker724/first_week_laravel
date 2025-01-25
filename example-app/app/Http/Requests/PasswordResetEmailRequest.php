@@ -22,7 +22,7 @@ class PasswordResetEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users|email',
         ];
     }
 
@@ -31,6 +31,7 @@ class PasswordResetEmailRequest extends FormRequest
         return [
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
+            'email.exists' => 'Введенная почта не относится ни к одному из пользователей'
         ];
     }
 }
